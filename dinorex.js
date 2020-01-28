@@ -7,45 +7,56 @@ canvas.width = window.innerWidth;
 const ctx = canvas.getContext('2d');
 container.appendChild(canvas);
 
-const CHARACTERHEIGHT = 50;
-const CHARACTERWIDTH = 25;
-const HORIZONHEIGHT = 10;
-const INITIALXAXISPOSITION = 10;
-const INITIALYAXISPOSITION = canvas.height - CHARACTERHEIGHT - HORIZONHEIGHT;
-
-let gameSpeed = 5;
-
-let characterXPosition = INITIALXAXISPOSITION;
-let characterYPosition = INITIALYAXISPOSITION;
-const OBSTACLEWIDTH = 10 + 10;
-
+let character;
+let obstacles = [];
 let gameStarted = false;
 let jump = false;
-let gravity = 50;
+let drop = false;
 let frames = 0;
-let maxJumpPoint = canvas.height - 250;
+let gameSpeed = 5;
+let crashed = false;
 
-let obstacles = [];
-
-const getObstacleX = () => rand(canvas.width, canvas.width + OBSTACLEWIDTH);
+function setup() {
+    character = new GameCharacter(canvas);
+    character.show(ctx);
+    initKeyMaps();
+    setBackground();
+    loop();
+}
 
 function loop() {
     frames += 1;
+
     setBackground();
-    initKeyMaps();
 
-    obstacles.forEach(obs => {
-        drawObstacle(obs);
-    });
-
-    if (frames % 150 == 0) {
-        const value = rand(0, 3);
-        for (let i = 0; i <= value; i++) {
-            addObstacle();
+    if (jump) {
+        character.jump();
+        if (character.reachedMaxHeight()) {
+            jump = false;
+            drop = true;
         }
     }
+    else if (drop) {
+        character.drop();
+    } else if (character.landed()) {
+        drop = false;
+    }
 
-    drawCharacter();
+
+    obstacles.forEach(obs => {
+        obs.show(ctx);
+        if (obs.hits(character)) {
+            crashed = true
+        }
+    });
+
+    if (frames % 150 === 0) {
+        const value = rand(1, 4);
+        addObstacle(value);
+    }
+
+    character.show(ctx);
+
     requestAnimationFrame(loop);
 }
 
@@ -62,6 +73,7 @@ function initKeyMaps() {
 function keyup(event) {
     if (event.keyCode === 32) {
         jump = false;
+        drop = true;
     }
 }
 
@@ -70,6 +82,10 @@ function keydown(event) {
         jump = true;
     }
     if (!gameStarted) {
+        if (crashed) {
+            setup();
+            crashed = false;
+        }
         gameStarted = true;
     }
 }
@@ -82,61 +98,20 @@ function setBackground() {
 
 
 function drawObstacle(obs) {
-    ctx.fillStyle = "#f00";
-    ctx.fill();
-    if (gameStarted) {
-        obs.x -= gameSpeed;
-    }
-    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-    ctx.fillStyle = "#333";
-    ctx.fill();
-    ctx.fillRect(obs.x + 10, obs.y, obs.width, obs.height);
+
 }
 
-function addObstacle() {
-    const obstacleHeight = CHARACTERHEIGHT + 10;
-    obstacles.push({
-        x: getObstacleX(),
-        y: canvas.height - obstacleHeight - HORIZONHEIGHT,
-        width: OBSTACLEWIDTH,
-        height: obstacleHeight
-    })
+function addObstacle(numberOfObstacles) {
+    for (let i = 0; i < numberOfObstacles; i++) {
+        obstacles.push(new Obstacle({ canvas, gameSpeed }));
+    }
 }
 
 function removeFirstObstacle() {
     obstacles.splice(0, 1);
 }
 
-function drawCharacter() {
-    ctx.fillStyle = "#fff";
-    ctx.fill();
 
-    if (characterYPosition <= maxJumpPoint) {
-        this.drop = true;
-        characterYPosition += gravity;
-    }
-
-    if (!drop && jump && characterYPosition > maxJumpPoint) {
-        characterYPosition -= gravity;
-        // characterYPosition -= gravity;
-    } else {
-        characterYPosition += gravity;
-        if (characterYPosition >= INITIALYAXISPOSITION) {
-            characterYPosition = INITIALYAXISPOSITION;
-        }
-        obstacles.forEach((obstacle, index) => {
-            if (obstacle.x < 0) {
-                obstacles.splice(index, 1);
-            }
-        });
-    }
-
-    ctx.fillRect(characterXPosition, characterYPosition, CHARACTERWIDTH, CHARACTERHEIGHT);
-
-}
-
-
-loop();
-
+setup();
 
 
