@@ -85,6 +85,27 @@ function getNewObstacle() {
 function initKeyMaps() {
     document.addEventListener('keydown', keydown);
     document.addEventListener('keyup', keyup);
+    document.addEventListener('touchstart', touchstarted);
+    document.addEventListener('touchend', touchended);
+}
+
+function touchstarted() {
+    if (character.landed()) {
+        jump = true;
+    }
+
+    if (!gameStarted) {
+        gameStarted = true;
+    }
+
+    if (crashed) {
+        reset();
+    }
+}
+
+function touchended(event) {
+    jump = false;
+    drop = true;
 }
 
 function showCrashedMessage() {
@@ -106,7 +127,6 @@ function keydown(event) {
         }
         if (crashed) {
             reset();
-            crashed = false;
         }
     }
     if (!gameStarted) {
@@ -137,5 +157,4 @@ function removeFirstObstacle() {
 
 
 setup();
-
 
