@@ -21,20 +21,30 @@ const OBSTACLEWIDTH = 10 + 10;
 
 let gameStarted = false;
 let jump = false;
-let gravity = 5;
-let maxJumpPoint = 300;
+let gravity = 50;
+let frames = 0;
+let maxJumpPoint = canvas.height - 250;
 
 let obstacles = [];
 
 const getObstacleX = () => rand(canvas.width, canvas.width + OBSTACLEWIDTH);
 
 function loop() {
+    frames += 1;
     setBackground();
     initKeyMaps();
+
     obstacles.forEach(obs => {
         drawObstacle(obs);
     });
-    addObstacle();
+
+    if (frames % 150 == 0) {
+        const value = rand(0, 3);
+        for (let i = 0; i <= value; i++) {
+            addObstacle();
+        }
+    }
+
     drawCharacter();
     requestAnimationFrame(loop);
 }
@@ -78,18 +88,19 @@ function drawObstacle(obs) {
         obs.x -= gameSpeed;
     }
     ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+    ctx.fillStyle = "#333";
+    ctx.fill();
+    ctx.fillRect(obs.x + 10, obs.y, obs.width, obs.height);
 }
 
 function addObstacle() {
     const obstacleHeight = CHARACTERHEIGHT + 10;
-    if (obstacles.length < 3) {
-        obstacles.push({
-            x: getObstacleX(),
-            y: canvas.height - obstacleHeight - HORIZONHEIGHT,
-            width: OBSTACLEWIDTH,
-            height: obstacleHeight
-        })
-    }
+    obstacles.push({
+        x: getObstacleX(),
+        y: canvas.height - obstacleHeight - HORIZONHEIGHT,
+        width: OBSTACLEWIDTH,
+        height: obstacleHeight
+    })
 }
 
 function removeFirstObstacle() {
@@ -99,26 +110,23 @@ function removeFirstObstacle() {
 function drawCharacter() {
     ctx.fillStyle = "#fff";
     ctx.fill();
-    if (gameStarted) {
 
+    if (characterYPosition <= maxJumpPoint) {
+        this.drop = true;
+        characterYPosition += gravity;
     }
 
-    if (jump) {
-        if (characterYPosition - gravity < 20) {
-            jump = false;
-        } else {
-            characterYPosition -= gravity;
-        }
+    if (!drop && jump && characterYPosition > maxJumpPoint) {
+        characterYPosition -= gravity;
+        // characterYPosition -= gravity;
     } else {
-        characterYPosition = characterYPosition + gravity > INITIALYAXISPOSITION ? INITIALYAXISPOSITION : characterYPosition + gravity;
-        obstacles.forEach(obstacle => {
-            if (characterYPosition > obstacle.y && characterXPosition > obstacle.x) {
-                removeFirstObstacle();
-                const randomNumber = rand(0, 10);
-                console.log(randomNumber);
-                for (let i = 0; i < randomNumber; i++) {
-                    addObstacle()
-                }
+        characterYPosition += gravity;
+        if (characterYPosition >= INITIALYAXISPOSITION) {
+            characterYPosition = INITIALYAXISPOSITION;
+        }
+        obstacles.forEach((obstacle, index) => {
+            if (obstacle.x < 0) {
+                obstacles.splice(index, 1);
             }
         });
     }
