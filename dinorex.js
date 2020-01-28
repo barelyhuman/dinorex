@@ -109,7 +109,7 @@ function touchended(event) {
 }
 
 function showCrashedMessage() {
-    ctx.font = "30px Arial";
+    ctx.font = "30px sans-serif";
     ctx.fillStyle = "#f00";
     const message = "You Crashed";
     ctx.fillText(message, (canvas.width / 2) - (message.length * message.length), canvas.height / 2);
