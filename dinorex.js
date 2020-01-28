@@ -24,6 +24,18 @@ function setup() {
     loop();
 }
 
+function reset() {
+    character = {}
+    obstacles = [];
+    gameStarted = false;
+    jump = false;
+    drop = false;
+    frames = 0;
+    gameSpeed = 5;
+    crashed = false;
+    setup();
+}
+
 function loop() {
     frames += 1;
 
@@ -44,18 +56,23 @@ function loop() {
 
 
     obstacles.forEach(obs => {
-        obs.show(ctx);
+        obs.show(ctx, { crashed });
         if (obs.hits(character)) {
             crashed = true
         }
     });
 
-    if (frames % 150 === 0) {
-        const value = rand(1, 4);
-        addObstacle(value);
+    if (crashed) {
+        showCrashedMessage();
+    } else {
+        if (frames % 150 === 0) {
+            const value = rand(1, 4);
+            addObstacle(value);
+        }
+
+        character.show(ctx);
     }
 
-    character.show(ctx);
 
     requestAnimationFrame(loop);
 }
@@ -70,6 +87,11 @@ function initKeyMaps() {
     document.addEventListener('keyup', keyup);
 }
 
+function showCrashedMessage() {
+    ctx.font = "30px Arial";
+    ctx.fillText("You Crashed", canvas.height / 2, canvas.width / 2);
+}
+
 function keyup(event) {
     if (event.keyCode === 32) {
         jump = false;
@@ -79,13 +101,15 @@ function keyup(event) {
 
 function keydown(event) {
     if (event.keyCode === 32) {
-        jump = true;
-    }
-    if (!gameStarted) {
+        if (character.landed()) {
+            jump = true;
+        }
         if (crashed) {
-            setup();
+            reset();
             crashed = false;
         }
+    }
+    if (!gameStarted) {
         gameStarted = true;
     }
 }

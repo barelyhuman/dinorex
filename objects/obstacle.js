@@ -1,5 +1,3 @@
-
-
 (function (namespace) {
     let height = 50;
     let width = 20;
@@ -17,14 +15,16 @@
     }
 
     Obstacle.prototype = {
-        show(ctx) {
+        show(ctx, options) {
             if (this.hit) {
                 ctx.fillStyle = "#f00";
             } else {
                 ctx.fillStyle = "#0f0";
             }
             ctx.fill();
-            this.x -= gameSpeed;
+            if (!options.crashed) {
+                this.x -= this.gameSpeed;
+            }
             ctx.fillRect(this.x, this.y, this.width, this.height);
         },
         hits(character) {

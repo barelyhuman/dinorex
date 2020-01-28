@@ -49,7 +49,7 @@
             return false;
         },
         landed() {
-            if (this.y === initialY) {
+            if (this.y >= initialY) {
                 return true;
             }
             return false;
