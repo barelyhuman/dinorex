@@ -110,7 +110,8 @@ function touchended(event) {
 
 function showCrashedMessage() {
     ctx.font = "30px Arial";
-    ctx.fillText("You Crashed", canvas.height / 2, canvas.width / 2);
+    ctx.fillStyle = "#f00";
+    ctx.fillText("You Crashed", canvas.width / 2, canvas.height / 2);
 }
 
 function keyup(event) {
