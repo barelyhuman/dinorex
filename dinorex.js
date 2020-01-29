@@ -7,6 +7,7 @@ canvas.width = container.offsetWidth;
 container.appendChild(canvas);
 
 const jumpKeys = [32, 38];
+const initialSpeed = 10;
 const ctx = canvas.getContext('2d');
 const storeName = 'dino-score';
 const horizonPosition = canvas.height / 2 + 100;
@@ -19,7 +20,7 @@ let gameStarted = false;
 let jump = false;
 let drop = false;
 let frames = 0;
-let gameSpeed = 10;
+let gameSpeed = initialSpeed;
 let score = 0;
 let crashed = false;
 
@@ -38,7 +39,7 @@ function reset() {
     obstacles = [];
     score = 0;
     gameStarted = false;
-    gameSpeed = 5;
+    gameSpeed = initialSpeed;
     jump = false;
     drop = false;
     frames = 0;
