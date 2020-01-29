@@ -98,28 +98,31 @@ function loop() {
 
     increaseGameSpeed();
 
-    obstacles.forEach((obs, index) => {
-        obs.show(ctx, { crashed });
-        if (obs.hits(character)) {
-            crashed = true
-        }
+    if (gameStarted) {
 
-        if (obs.outside()) {
-            obstacles.splice(index, 1);
-        }
-    });
+        obstacles.forEach((obs, index) => {
+            obs.show(ctx, { crashed });
+            if (obs.hits(character)) {
+                crashed = true
+            }
 
-    if (crashed) {
-        showCrashedMessage();
-    } else {
+            if (obs.outside()) {
+                obstacles.splice(index, 1);
+            }
+        });
+
         if (frames % 150 === 0) {
             const value = rand(1, 4);
             addObstacle(value);
         }
 
-        character.show(ctx);
     }
 
+    if (crashed) {
+        showCrashedMessage();
+    }
+
+    character.show(ctx);
 
     animationFrame = requestAnimationFrame(loop);
 }
