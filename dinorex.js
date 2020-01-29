@@ -19,7 +19,7 @@ let gameStarted = false;
 let jump = false;
 let drop = false;
 let frames = 0;
-let gameSpeed = 7;
+let gameSpeed = 10;
 let score = 0;
 let crashed = false;
 
