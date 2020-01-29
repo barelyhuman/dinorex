@@ -2,26 +2,18 @@
 
     let gravity = 5;
     let velocity = 1.2;
-    let height = 60;
-    let width = 60;
+    let height = 50;
+    let width = 20;
     let initialX = 30;
     let maxJumpHeight;
     let minJumpHeight;
     let initialY;
     let runningImages = [
-        '/assets/running-1.svg',
-        '/assets/running-2.svg',
-        '/assets/running-3.svg',
-        '/assets/running-4.svg',
-        '/assets/running-5.svg',
-        '/assets/running-6.svg',
-        '/assets/running-7.svg',
-        '/assets/running-8.svg',
-        '/assets/running-9.svg',
-        '/assets/running-10.svg',
-        '/assets/running-11.svg',
-        '/assets/running-12.svg',
-        '/assets/running-13.svg',
+        '/assets/2-running.svg',
+        '/assets/3-running.svg',
+        '/assets/4-running.svg',
+        '/assets/5-running.svg',
+        '/assets/6-running.svg',
     ];
     const slidingImages = ['/assets/slide.svg'];
 
