@@ -31,10 +31,8 @@
             ctx.fillRect(this.x, this.y, this.width, this.height);
         },
         hits(character) {
-            if (
-                (this.y <= character.y + character.height && this.y >= character.y)
-                &&
-                (character.x <= this.x + this.width && character.x >= this.x)) {
+            if (this.x < character.x + character.width && this.x + this.width > character.x &&
+                this.y < character.y + character.height && this.y + this.height > character.y) {
                 this.hit = true;
                 return true;
             }
