@@ -97,43 +97,47 @@ function loop() {
     renderScore();
 
     increaseGameSpeed();
+    if (!gameStarted && !crashed) {
+        showWelcomeMessage();
+    }
 
+    if (gameStarted) {
+        clouds.forEach((cloud, index) => {
+            cloud.show(ctx, { crashed });
 
-    clouds.forEach((cloud, index) => {
-        cloud.show(ctx, { crashed });
+            if (cloud.outside()) {
+                clouds.splice(index, 1);
+            }
+        });
 
-        if (cloud.outside()) {
-            clouds.splice(index, 1);
-        }
-    });
+        obstacles.forEach((obs, index) => {
+            obs.show(ctx, { crashed });
+            if (obs.hits(character)) {
+                crashed = true
+            }
 
-    obstacles.forEach((obs, index) => {
-        obs.show(ctx, { crashed });
-        if (obs.hits(character)) {
-            crashed = true
-        }
+            if (obs.outside()) {
+                obstacles.splice(index, 1);
+            }
+        });
 
-        if (obs.outside()) {
-            obstacles.splice(index, 1);
-        }
-    });
-
-    if (crashed) {
-        showCrashedMessage();
-    } else {
         if (frames % 150 === 0) {
             const value = rand(1, 4);
             addObstacle(value);
         }
 
-        if (frames % 50 === 0) {
+        if (frames % 10 === 0) {
             const value = rand(1, 3);
             drawClouds(value);
         }
 
-        character.show(ctx);
+        character.show(ctx, frames, crashed);
+
     }
 
+    if (crashed) {
+        showCrashedMessage();
+    }
 
     animationFrame = requestAnimationFrame(loop);
 }
@@ -181,20 +185,23 @@ function keydown(event) {
         reset();
     }
 
-    if (jumpKeys.indexOf(event.keyCode) > -1) {
-        if (character.landed()) {
-            jump = true;
+    if (!crashed) {
+        if (jumpKeys.indexOf(event.keyCode) > -1) {
+            if (character.landed()) {
+                jump = true;
+            }
+
+            if (!gameStarted) {
+                gameStarted = true;
+            }
+        }
+
+        if (gameStarted && event.keyCode === 40) {
+            drop = false;
+            character.slide()
         }
     }
 
-    if (event.keyCode === 40) {
-        drop = false;
-        character.slide()
-    }
-
-    if (!gameStarted) {
-        gameStarted = true;
-    }
 }
 
 // Render Crash message
@@ -234,7 +241,7 @@ function renderScore() {
     const highScore = getHighscore()
 
     ctx.font = "16px sans-serif";
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = "#333";
     const threshold = 30;
     const text = `HI ${highScore || 0} | ${score}`;
     ctx.fillText(text, canvas.width - (text.length * text.length) - threshold, threshold);
@@ -260,6 +267,9 @@ function drawHorizon() {
 
 // Render Clouds
 function drawClouds(numberOfClouds) {
+    if (clouds.length > 10) {
+        return;
+    }
     for (let i = 0; i < numberOfClouds; i++) {
         const cloud = new Cloud({ gameSpeed, horizon: horizonPosition });
         clouds.push(cloud);
@@ -267,6 +277,14 @@ function drawClouds(numberOfClouds) {
 
 }
 
+function showWelcomeMessage() {
+    ctx.font = "20px sans-serif";
+    ctx.fillStyle = "#333";
+    const messageLineTwo = "Press Space to start";
+    ctx.fillText(messageLineTwo, (canvas.width / 2) - 150, horizonPosition / 2);
+}
+
 // Initial Call
-setup();
+window.requestAnimationFrame(setup)
+// setup();
 
