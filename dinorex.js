@@ -21,6 +21,7 @@ const horizonPosition = canvas.height / 2 + 100;
 let animationFrame;
 let character;
 let obstacles = [];
+let clouds = [];
 let gameStarted = false;
 let jump = false;
 let drop = false;
@@ -93,10 +94,18 @@ function loop() {
     }
 
     drawHorizon();
-
     renderScore();
 
     increaseGameSpeed();
+
+
+    clouds.forEach((cloud, index) => {
+        cloud.show(ctx, { crashed });
+
+        if (cloud.outside()) {
+            clouds.splice(index, 1);
+        }
+    });
 
     obstacles.forEach((obs, index) => {
         obs.show(ctx, { crashed });
@@ -115,6 +124,11 @@ function loop() {
         if (frames % 150 === 0) {
             const value = rand(1, 4);
             addObstacle(value);
+        }
+
+        if (frames % 50 === 0) {
+            const value = rand(1, 3);
+            drawClouds(value);
         }
 
         character.show(ctx);
@@ -156,6 +170,10 @@ function keyup(event) {
         jump = false;
         drop = true;
     }
+
+    if (event.keyCode === 40) {
+        character.getUp();
+    }
 }
 
 function keydown(event) {
@@ -168,6 +186,12 @@ function keydown(event) {
             jump = true;
         }
     }
+
+    if (event.keyCode === 40) {
+        drop = false;
+        character.slide()
+    }
+
     if (!gameStarted) {
         gameStarted = true;
     }
@@ -176,7 +200,7 @@ function keydown(event) {
 // Render Crash message
 function showCrashedMessage() {
     ctx.font = "20px sans-serif";
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = "#333";
     const threshold = 20;
     const messageLineOne = "You Crashed";
     const messageLineTwo = "Press Enter to continue";
@@ -188,7 +212,7 @@ function showCrashedMessage() {
 
 // Render Background
 function setBackground() {
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#fff';
     ctx.fill();
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
@@ -230,12 +254,16 @@ function drawHorizon() {
     ctx.beginPath();
     ctx.moveTo(0, horizonPosition);
     ctx.lineTo(canvas.width, horizonPosition);
-    ctx.strokeStyle = "#fff";
+    ctx.strokeStyle = "#333";
     ctx.stroke();
 }
 
 // Render Clouds
-function drawClouds() {
+function drawClouds(numberOfClouds) {
+    for (let i = 0; i < numberOfClouds; i++) {
+        const cloud = new Cloud({ gameSpeed, horizon: horizonPosition });
+        clouds.push(cloud);
+    }
 
 }
 

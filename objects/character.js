@@ -14,6 +14,7 @@
         initialY = horizon - height;
         maxJumpHeight = horizon - (height * 4);
         minJumpHeight = horizon - (height * 3.9);
+        this.horizon = horizon;
         this.canvas = canvas;
         this.y = initialY;
         this.x = initialX;
@@ -34,7 +35,7 @@
             }
         },
         show(ctx) {
-            ctx.fillStyle = "#fff";
+            ctx.fillStyle = "#333";
             ctx.fill();
             ctx.fillRect(this.x, this.y, this.width, this.height);
         },
@@ -55,6 +56,16 @@
                 return true;
             }
             return false;
+        },
+        slide() {
+            this.width = height;
+            this.height = width;
+            this.y = this.horizon - width;
+        },
+        getUp() {
+            this.width = width;
+            this.height = height;
+            this.y = this.horizon - height;
         }
 
 
