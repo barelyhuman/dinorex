@@ -3,11 +3,11 @@
     let width = 20;
     let initialX;
 
-    function Obstacle({ canvas, gameSpeed }) {
+    function Obstacle({ canvas, gameSpeed, horizon }) {
         this.gameSpeed = gameSpeed;
         this.canvas = canvas;
         initialX = canvas.width;
-        this.y = canvas.height - height;
+        this.y = horizon - height;
         this.x = initialX;
         this.height = height;
         this.width = width
@@ -23,6 +23,7 @@
             }
             ctx.fill();
             if (!options.crashed) {
+                const before = this.x;
                 this.x -= this.gameSpeed;
             }
             ctx.fillRect(this.x, this.y, this.width, this.height);

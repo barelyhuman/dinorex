@@ -1,17 +1,19 @@
 (function (namespace) {
 
-    let gravity = 10;
-    let velocity = 0.35;
+    let gravity = 5;
+    let velocity = 1.2;
     let height = 50;
     let width = 20;
     let initialX = 30;
     let maxJumpHeight;
+    let minJumpHeight;
     let initialY;
 
-    function GameCharacter(canvas) {
+    function GameCharacter({ canvas, horizon }) {
 
-        initialY = canvas.height - height;
-        maxJumpHeight = canvas.height - (height * 3);
+        initialY = horizon - height;
+        maxJumpHeight = horizon - (height * 4);
+        minJumpHeight = horizon - (height * 3.9);
         this.canvas = canvas;
         this.y = initialY;
         this.x = initialX;
@@ -43,7 +45,7 @@
             return false;
         },
         reachedMaxHeight() {
-            if (this.y <= maxJumpHeight) {
+            if (this.y < minJumpHeight || this.y <= maxJumpHeight) {
                 return true;
             }
             return false;

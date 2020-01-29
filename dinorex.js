@@ -1,23 +1,30 @@
 const container = document.querySelector('.game');
 const canvas = document.createElement('canvas');
 
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
+canvas.height = container.offsetHeight;
+canvas.width = container.offsetWidth;
 
-const ctx = canvas.getContext('2d');
 container.appendChild(canvas);
 
+const jumpKeys = [32, 38];
+const ctx = canvas.getContext('2d');
+const storeName = 'dino-score';
+const horizonPosition = canvas.height / 2 + 100;
+
+let animationFrame;
 let character;
+
 let obstacles = [];
 let gameStarted = false;
 let jump = false;
 let drop = false;
 let frames = 0;
-let gameSpeed = 5;
+let gameSpeed = 7;
+let score = 0;
 let crashed = false;
 
 function setup() {
-    character = new GameCharacter(canvas);
+    character = new GameCharacter({ canvas, horizon: horizonPosition });
     character.show(ctx);
     initKeyMaps();
     setBackground();
@@ -25,15 +32,30 @@ function setup() {
 }
 
 function reset() {
-    character = {}
+    setHighscore();
+    cancelAnimationFrame(animationFrame);
+    character;
     obstacles = [];
+    score = 0;
     gameStarted = false;
+    gameSpeed = 5;
     jump = false;
     drop = false;
     frames = 0;
-    gameSpeed = 5;
     crashed = false;
     setup();
+}
+
+function setHighscore() {
+    const storedScore = localStorage.getItem(storeName);
+    if (storedScore > score) {
+        return;
+    }
+    localStorage.setItem(storeName, score);
+}
+
+function getHighscore() {
+    return localStorage.getItem(storeName);
 }
 
 function loop() {
@@ -48,17 +70,27 @@ function loop() {
             drop = true;
         }
     }
+
     else if (drop) {
         character.drop();
     } else if (character.landed()) {
         drop = false;
     }
 
+    drawHorizon();
 
-    obstacles.forEach(obs => {
+    renderScore();
+
+    increaseGameSpeed();
+
+    obstacles.forEach((obs, index) => {
         obs.show(ctx, { crashed });
         if (obs.hits(character)) {
             crashed = true
+        }
+
+        if (obs.outside()) {
+            obstacles.splice(index, 1);
         }
     });
 
@@ -74,7 +106,7 @@ function loop() {
     }
 
 
-    requestAnimationFrame(loop);
+    animationFrame = requestAnimationFrame(loop);
 }
 
 function getNewObstacle() {
@@ -116,14 +148,14 @@ function showCrashedMessage() {
 }
 
 function keyup(event) {
-    if (event.keyCode === 32) {
+    if (jumpKeys.indexOf(event.keyCode) > -1) {
         jump = false;
         drop = true;
     }
 }
 
 function keydown(event) {
-    if (event.keyCode === 32) {
+    if (jumpKeys.indexOf(event.keyCode) > -1) {
         if (character.landed()) {
             jump = true;
         }
@@ -142,21 +174,41 @@ function setBackground() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-
-function drawObstacle(obs) {
-
-}
-
 function addObstacle(numberOfObstacles) {
     for (let i = 0; i < numberOfObstacles; i++) {
-        obstacles.push(new Obstacle({ canvas, gameSpeed }));
+        obstacles.push(new Obstacle({ canvas, gameSpeed, horizon: horizonPosition }));
     }
 }
 
-function removeFirstObstacle() {
-    obstacles.splice(0, 1);
+
+function renderScore() {
+    if (gameStarted && !crashed) {
+        score += 1;
+    }
+
+    const highScore = getHighscore()
+
+    ctx.font = "16px sans-serif";
+    ctx.fillStyle = "#fff";
+    const threshold = 30;
+    const text = `HI ${highScore || 0} | ${score}`;
+    ctx.fillText(text, canvas.width - (text.length * text.length) - threshold, threshold);
 }
 
+function increaseGameSpeed() {
+    if (frames % 500 === 0 && !crashed) {
+        gameSpeed += 1;
+    }
+}
+
+function drawHorizon() {
+    ctx.beginPath();
+    ctx.moveTo(0, horizonPosition);
+    ctx.lineTo(canvas.width, horizonPosition);
+    ctx.strokeStyle = "#fff";
+    ctx.stroke();
+
+}
 
 setup();
 
