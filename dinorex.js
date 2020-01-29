@@ -1,3 +1,6 @@
+
+// Canvas Setup
+
 const container = document.querySelector('.game');
 const canvas = document.createElement('canvas');
 
@@ -6,15 +9,17 @@ canvas.width = container.offsetWidth;
 
 container.appendChild(canvas);
 
+// Constant Declarations
 const jumpKeys = [32, 38];
 const initialSpeed = 10;
 const ctx = canvas.getContext('2d');
 const storeName = 'dino-score';
 const horizonPosition = canvas.height / 2 + 100;
 
+
+// Variable Declarations
 let animationFrame;
 let character;
-
 let obstacles = [];
 let gameStarted = false;
 let jump = false;
@@ -24,6 +29,8 @@ let gameSpeed = initialSpeed;
 let score = 0;
 let crashed = false;
 
+
+// Initial Render 
 function setup() {
     character = new GameCharacter({ canvas, horizon: horizonPosition });
     character.show(ctx);
@@ -32,6 +39,8 @@ function setup() {
     loop();
 }
 
+
+// Reset Frames
 function reset() {
     setHighscore();
     cancelAnimationFrame(animationFrame);
@@ -47,6 +56,8 @@ function reset() {
     setup();
 }
 
+
+// Local Storage calls
 function setHighscore() {
     const storedScore = localStorage.getItem(storeName);
     if (storedScore > score) {
@@ -58,6 +69,9 @@ function setHighscore() {
 function getHighscore() {
     return localStorage.getItem(storeName);
 }
+
+
+// Main Render Function
 
 function loop() {
     frames += 1;
@@ -110,11 +124,7 @@ function loop() {
     animationFrame = requestAnimationFrame(loop);
 }
 
-function getNewObstacle() {
-    obstaclePosition = rand(canvas.width / 2, canvas.width);;
-}
-
-
+// Map Keys and Events to actions
 function initKeyMaps() {
     document.addEventListener('keydown', keydown);
     document.addEventListener('keyup', keyup);
@@ -141,13 +151,6 @@ function touchended(event) {
     drop = true;
 }
 
-function showCrashedMessage() {
-    ctx.font = "30px sans-serif";
-    ctx.fillStyle = "#f00";
-    const message = "You Crashed";
-    ctx.fillText(message, (canvas.width / 2) - (message.length * message.length), canvas.height / 2);
-}
-
 function keyup(event) {
     if (jumpKeys.indexOf(event.keyCode) > -1) {
         jump = false;
@@ -156,12 +159,13 @@ function keyup(event) {
 }
 
 function keydown(event) {
+    if (crashed && event.keyCode === 13) {
+        reset();
+    }
+
     if (jumpKeys.indexOf(event.keyCode) > -1) {
         if (character.landed()) {
             jump = true;
-        }
-        if (crashed) {
-            reset();
         }
     }
     if (!gameStarted) {
@@ -169,19 +173,35 @@ function keydown(event) {
     }
 }
 
+// Render Crash message
+function showCrashedMessage() {
+    ctx.font = "20px sans-serif";
+    ctx.fillStyle = "#fff";
+    const threshold = 20;
+    const messageLineOne = "You Crashed";
+    const messageLineTwo = "Press Enter to continue";
+    ctx.fillText(messageLineOne, (canvas.width / 2) - 100, horizonPosition / 2);
+    ctx.fillText(messageLineTwo, (canvas.width / 2) - 150, horizonPosition / 2 + threshold);
+}
+
+
+
+// Render Background
 function setBackground() {
     ctx.fillStyle = '#333';
     ctx.fill();
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
+
+// Increment Obstacles
 function addObstacle(numberOfObstacles) {
     for (let i = 0; i < numberOfObstacles; i++) {
         obstacles.push(new Obstacle({ canvas, gameSpeed, horizon: horizonPosition }));
     }
 }
 
-
+// Render Score and High Score
 function renderScore() {
     if (gameStarted && !crashed) {
         score += 1;
@@ -196,20 +216,29 @@ function renderScore() {
     ctx.fillText(text, canvas.width - (text.length * text.length) - threshold, threshold);
 }
 
+
+// Change Game Speed
 function increaseGameSpeed() {
     if (frames % 500 === 0 && !crashed) {
         gameSpeed += 1;
     }
 }
 
+
+// Render Horizon
 function drawHorizon() {
     ctx.beginPath();
     ctx.moveTo(0, horizonPosition);
     ctx.lineTo(canvas.width, horizonPosition);
     ctx.strokeStyle = "#fff";
     ctx.stroke();
+}
+
+// Render Clouds
+function drawClouds() {
 
 }
 
+// Initial Call
 setup();
 

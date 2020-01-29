@@ -1,16 +1,18 @@
 (function (namespace) {
-    let height = 50;
-    let width = 20;
+    let height;
+    let width;
     let initialX;
 
     function Obstacle({ canvas, gameSpeed, horizon }) {
+        height = rand(50, 100);
+        width = rand(20, 40);
         this.gameSpeed = gameSpeed;
         this.canvas = canvas;
         initialX = canvas.width;
         this.y = horizon - height;
         this.x = initialX;
         this.height = height;
-        this.width = width
+        this.width = width;
         this.hit = false;
     }
 
