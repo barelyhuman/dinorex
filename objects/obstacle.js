@@ -4,7 +4,7 @@
     let initialX;
 
     function Obstacle({ canvas, gameSpeed, horizon }) {
-        height = rand(50, 100);
+        height = rand(50, 70);
         width = rand(20, 40);
         this.gameSpeed = gameSpeed;
         this.canvas = canvas;
@@ -18,16 +18,11 @@
 
     Obstacle.prototype = {
         show(ctx, options) {
-            if (this.hit) {
-                ctx.fillStyle = "#f00";
-            } else {
-                ctx.fillStyle = "#0f0";
-            }
-            ctx.fill();
+            ctx.fillStyle = "#333";
             if (!options.crashed) {
-                const before = this.x;
                 this.x -= this.gameSpeed;
             }
+            ctx.fill();
             ctx.fillRect(this.x, this.y, this.width, this.height);
         },
         hits(character) {
