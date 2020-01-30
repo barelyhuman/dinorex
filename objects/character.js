@@ -8,13 +8,15 @@
     let maxJumpHeight;
     let minJumpHeight;
     let initialY;
-    let runningImages = [
+    const runningImages = [
         '/assets/2-running.svg',
         '/assets/3-running.svg',
         '/assets/4-running.svg',
         '/assets/5-running.svg',
         '/assets/6-running.svg',
     ];
+
+
     const slidingImages = ['/assets/slide.svg'];
 
     function GameCharacter({ canvas, horizon }) {
@@ -29,6 +31,19 @@
         this.height = height;
         this.width = width
         this.sliding = false;
+
+        this.runningObjects = runningImages.map(imgPath => {
+            const img = new Image();
+            img.src = imgPath;
+            return img;
+        });
+
+        this.slidingObjects = slidingImages.map(imgPath => {
+            const img = new Image();
+            img.src = imgPath;
+            return img;
+        });
+
     }
 
     GameCharacter.prototype = {
@@ -45,11 +60,14 @@
         },
         show(ctx, frames, crashed) {
             let image;
-            image = new Image();
             if (this.sliding) {
-                image.src = slidingImages[0];
+                image = this.slidingObjects[0];
             } else {
-                image.src = runningImages[this.currentRunningImageIndex];
+                if (this.runningObjects[this.currentRunningImageIndex]) {
+                    image = this.runningObjects[this.currentRunningImageIndex];
+                } else {
+                    image = this.runningObjects[0];
+                }
                 if (!crashed && frames % 5 === 0) {
                     if (this.currentRunningImageIndex + 1 > runningImages.length) {
                         this.currentRunningImageIndex = 0;

@@ -45,7 +45,7 @@ function setup() {
 function reset() {
     setHighscore();
     cancelAnimationFrame(animationFrame);
-    character;
+    character = {};
     obstacles = [];
     score = 0;
     gameStarted = false;
@@ -121,7 +121,7 @@ function loop() {
             }
         });
 
-        if (frames % 150 === 0) {
+        if (frames % 70 === 0) {
             const value = rand(1, 4);
             addObstacle(value);
         }
