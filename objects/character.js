@@ -1,7 +1,7 @@
 (function (namespace) {
 
-    let gravity = 5;
-    let velocity = 1.2;
+    let gravity = 4;
+    let velocity = 2.2;
     let height = 50;
     let width = 20;
     let initialX = 30;
