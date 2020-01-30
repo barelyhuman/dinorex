@@ -3,6 +3,8 @@
     let width;
     let initialX;
     let velocity = 0.2;
+    const cloud = new Image();
+    cloud.src = "/assets/cloud.svg";
 
     function Cloud({ gameSpeed, horizon }) {
         height = width = rand(40, 70);
@@ -17,8 +19,6 @@
 
     Cloud.prototype = {
         show(ctx, options) {
-            const cloud = new Image();
-            cloud.src = "/assets/cloud.svg";
             if (!options.crashed) {
                 this.x -= this.gameSpeed * velocity;
             }

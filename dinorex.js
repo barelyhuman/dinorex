@@ -12,7 +12,7 @@ container.appendChild(canvas);
 // Constant Declarations
 const jumpKeys = [32, 38];
 const initialSpeed = 10;
-const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d', { alpha: false });
 const storeName = 'dino-score';
 const horizonPosition = canvas.height / 2 + 100;
 
@@ -121,7 +121,7 @@ function loop() {
             }
         });
 
-        const frameInterval = rand(60, 70);
+        const frameInterval = rand(70, 72);
 
         if (frames % frameInterval === 0) {
             if (obstacles.length < 5) {
