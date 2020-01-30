@@ -124,7 +124,7 @@ function loop() {
         const frameInterval = rand(60, 70);
 
         if (frames % frameInterval === 0) {
-            if (obstacles.length < 10) {
+            if (obstacles.length < 5) {
                 addObstacle();
             }
         }
