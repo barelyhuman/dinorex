@@ -3,9 +3,18 @@
     let width;
     let initialX;
 
+    const fenceImages = ['/assets/fence.svg'];
+
+    const loadedFenceImages = fenceImages.map(src => {
+        const img = new Image();
+        img.src = src;
+        return img;
+    });
+
     function Obstacle({ canvas, gameSpeed, horizon }) {
-        height = rand(50, 70);
-        width = rand(20, 40);
+        const randDimensions = rand(50, 70);
+        height = randDimensions;
+        width = randDimensions;
         this.gameSpeed = gameSpeed;
         this.canvas = canvas;
         initialX = canvas.width;
@@ -18,12 +27,11 @@
 
     Obstacle.prototype = {
         show(ctx, options) {
-            ctx.fillStyle = "#333";
             if (!options.crashed) {
                 this.x -= this.gameSpeed;
             }
-            ctx.fill();
-            ctx.fillRect(this.x, this.y, this.width, this.height);
+
+            ctx.drawImage(loadedFenceImages[0], this.x, this.y, this.width, this.height);
         },
         hits(character) {
             if (this.x < character.x + character.width && this.x + this.width > character.x &&

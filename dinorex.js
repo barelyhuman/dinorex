@@ -121,9 +121,12 @@ function loop() {
             }
         });
 
-        if (frames % 70 === 0) {
-            const value = rand(1, 4);
-            addObstacle(value);
+        const frameInterval = rand(60, 70);
+
+        if (frames % frameInterval === 0) {
+            if (obstacles.length < 10) {
+                addObstacle();
+            }
         }
 
         if (frames % 10 === 0) {
@@ -181,9 +184,6 @@ function keyup(event) {
 }
 
 function keydown(event) {
-    if (crashed && event.keyCode === 13) {
-        reset();
-    }
 
     if (!crashed) {
         if (jumpKeys.indexOf(event.keyCode) > -1) {
@@ -200,6 +200,10 @@ function keydown(event) {
             drop = false;
             character.slide()
         }
+    } else {
+        if (jumpKeys.indexOf(event.keyCode) > -1) {
+            reset();
+        }
     }
 
 }
@@ -210,7 +214,7 @@ function showCrashedMessage() {
     ctx.fillStyle = "#333";
     const threshold = 20;
     const messageLineOne = "You Crashed";
-    const messageLineTwo = "Press Enter to continue";
+    const messageLineTwo = "Press Space to continue";
     ctx.fillText(messageLineOne, (canvas.width / 2) - 100, horizonPosition / 2);
     ctx.fillText(messageLineTwo, (canvas.width / 2) - 150, horizonPosition / 2 + threshold);
 }
@@ -226,10 +230,8 @@ function setBackground() {
 
 
 // Increment Obstacles
-function addObstacle(numberOfObstacles) {
-    for (let i = 0; i < numberOfObstacles; i++) {
-        obstacles.push(new Obstacle({ canvas, gameSpeed, horizon: horizonPosition }));
-    }
+function addObstacle() {
+    obstacles.push(new Obstacle({ canvas, gameSpeed, horizon: horizonPosition }));
 }
 
 // Render Score and High Score
@@ -250,7 +252,7 @@ function renderScore() {
 
 // Change Game Speed
 function increaseGameSpeed() {
-    if (frames % 500 === 0 && !crashed) {
+    if (frames % 1000 === 0 && !crashed) {
         gameSpeed += 1;
     }
 }
