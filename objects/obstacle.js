@@ -2,6 +2,7 @@
     let height;
     let width;
     let initialX;
+    let velocity = 0.5;
 
     const fenceImages = ['/assets/log-fire.svg'];
 
@@ -28,7 +29,7 @@
     Obstacle.prototype = {
         show(ctx, options) {
             if (!options.crashed) {
-                this.x -= this.gameSpeed;
+                this.x -= this.gameSpeed * velocity;
             }
 
             ctx.drawImage(loadedFenceImages[0], this.x, this.y, this.width, this.height);
