@@ -2,8 +2,8 @@
 
     let gravity = 4;
     let velocity = 2.2;
-    let height = 50;
-    let width = 20;
+    let height = 70;
+    let width = 30;
     let initialX = 30;
     let maxJumpHeight;
     let minJumpHeight;
@@ -21,8 +21,8 @@
 
     function GameCharacter({ canvas, horizon }) {
         initialY = horizon - height;
-        maxJumpHeight = horizon - (height * 3.4);
-        minJumpHeight = horizon - (height * 3.3);
+        maxJumpHeight = horizon - (height * 2.5);
+        minJumpHeight = horizon - (height * 2.4);
         this.horizon = horizon;
         this.canvas = canvas;
         this.currentRunningImageIndex = 0;

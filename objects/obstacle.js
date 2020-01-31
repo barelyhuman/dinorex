@@ -3,7 +3,7 @@
     let width;
     let initialX;
 
-    const fenceImages = ['/assets/fence.svg'];
+    const fenceImages = ['/assets/log-fire.svg'];
 
     const loadedFenceImages = fenceImages.map(src => {
         const img = new Image();
@@ -12,7 +12,7 @@
     });
 
     function Obstacle({ canvas, gameSpeed, horizon }) {
-        const randDimensions = rand(40, 50);
+        const randDimensions = rand(40, 60);
         height = randDimensions;
         width = randDimensions;
         this.gameSpeed = gameSpeed;
