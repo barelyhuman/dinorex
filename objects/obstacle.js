@@ -12,7 +12,7 @@
     });
 
     function Obstacle({ canvas, gameSpeed, horizon }) {
-        const randDimensions = rand(50, 70);
+        const randDimensions = rand(40, 50);
         height = randDimensions;
         width = randDimensions;
         this.gameSpeed = gameSpeed;

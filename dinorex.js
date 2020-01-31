@@ -22,6 +22,7 @@ let animationFrame;
 let character;
 let obstacles = [];
 let clouds = [];
+let lamps = [];
 let gameStarted = false;
 let jump = false;
 let drop = false;
@@ -121,6 +122,15 @@ function loop() {
             }
         });
 
+        lamps.forEach((lamp, index) => {
+            lamp.show(ctx, { crashed });
+
+            if (lamp.outside()) {
+                lamps.splice(index, 1);
+            }
+        });
+
+
         const frameInterval = rand(70, 72);
 
         if (frames % frameInterval === 0) {
@@ -129,9 +139,13 @@ function loop() {
             }
         }
 
-        if (frames % 10 === 0) {
+        if (frames % rand(50, 62) === 0) {
             const value = rand(1, 3);
             drawClouds(value);
+        }
+
+        if (frames % 70 === 0) {
+            drawLamps();
         }
 
         character.show(ctx, frames, crashed);
@@ -278,6 +292,19 @@ function drawClouds(numberOfClouds) {
     }
 
 }
+
+// Render Lamps
+function drawLamps() {
+    if (lamps.length > 2) {
+        return;
+    }
+
+    lamps.push(
+        new Lamp({ gameSpeed, horizon: horizonPosition })
+    );
+
+}
+
 
 function showWelcomeMessage() {
     ctx.font = "20px sans-serif";
