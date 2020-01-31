@@ -19,7 +19,7 @@
         this.gameSpeed = gameSpeed;
         this.canvas = canvas;
         initialX = canvas.width;
-        this.y = horizon - height;
+        this.y = horizon - height + 5;
         this.x = initialX;
         this.height = height;
         this.width = width;
