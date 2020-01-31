@@ -2,7 +2,7 @@
     let height;
     let width;
     let initialX;
-    let velocity = 0.5;
+    let velocity = 0.7;
 
     const lamp = new Image();
     lamp.src = "/assets/lamp-1.svg";
