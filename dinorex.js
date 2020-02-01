@@ -1,6 +1,5 @@
 
 // Canvas Setup
-
 const container = document.querySelector('.game');
 const canvas = document.createElement('canvas');
 
@@ -20,9 +19,11 @@ const horizonPosition = canvas.height / 2 + 100;
 // Variable Declarations
 let animationFrame;
 let character;
+let sliding = false;
 let obstacles = [];
 let clouds = [];
 let lamps = [];
+let arrows = [];
 let gameStarted = false;
 let jump = false;
 let drop = false;
@@ -48,6 +49,7 @@ function reset() {
     cancelAnimationFrame(animationFrame);
     character = {};
     obstacles = [];
+    arrows = [];
     score = 0;
     gameStarted = false;
     gameSpeed = initialSpeed;
@@ -96,60 +98,18 @@ function loop() {
 
     drawHorizon();
     renderScore();
-
     increaseGameSpeed();
+
     if (!gameStarted && !crashed) {
         showWelcomeMessage();
     }
 
     if (gameStarted) {
-        clouds.forEach((cloud, index) => {
-            cloud.show(ctx, { crashed });
-
-            if (cloud.outside()) {
-                clouds.splice(index, 1);
-            }
-        });
-
-        obstacles.forEach((obs, index) => {
-            obs.show(ctx, { crashed });
-            if (obs.hits(character)) {
-                crashed = true
-            }
-
-            if (obs.outside()) {
-                obstacles.splice(index, 1);
-            }
-        });
-
-        lamps.forEach((lamp, index) => {
-            lamp.show(ctx, { crashed });
-
-            if (lamp.outside()) {
-                lamps.splice(index, 1);
-            }
-        });
-
-
-        const frameInterval = rand(70, 72);
-
-        if (frames % frameInterval === 0) {
-            if (obstacles.length < 5) {
-                addObstacle();
-            }
-        }
-
-        if (frames % rand(50, 62) === 0) {
-            const value = rand(1, 3);
-            drawClouds(value);
-        }
-
-        if (frames % 70 === 0) {
-            drawLamps();
-        }
-
+        addFillers();
+        addObstacles();
+        renderFillers();
+        renderObstacles();
         character.show(ctx, frames, crashed);
-
     }
 
     if (crashed) {
@@ -193,6 +153,7 @@ function keyup(event) {
     }
 
     if (event.keyCode === 40) {
+        sliding = false;
         character.getUp();
     }
 }
@@ -201,7 +162,7 @@ function keydown(event) {
 
     if (!crashed) {
         if (jumpKeys.indexOf(event.keyCode) > -1) {
-            if (character.landed()) {
+            if (character.landed() && !sliding) {
                 jump = true;
             }
 
@@ -212,6 +173,7 @@ function keydown(event) {
 
         if (gameStarted && event.keyCode === 40) {
             drop = false;
+            sliding = true;
             character.slide()
         }
     } else {
@@ -295,7 +257,7 @@ function drawClouds(numberOfClouds) {
 
 // Render Lamps
 function drawLamps() {
-    if (lamps.length > 2) {
+    if (lamps.length >= 1) {
         return;
     }
 
@@ -305,12 +267,95 @@ function drawLamps() {
 
 }
 
+function drawArrows() {
+    if (arrows.length >= 1) {
+        return;
+    }
+
+    arrows.push(
+        new Arrow({ gameSpeed, horizon: horizonPosition, character })
+    );
+}
+
 
 function showWelcomeMessage() {
     ctx.font = "20px sans-serif";
     ctx.fillStyle = "#333";
     const messageLineTwo = "Press Space to start";
     ctx.fillText(messageLineTwo, (canvas.width / 2) - 150, horizonPosition / 2);
+}
+
+
+function addFillers() {
+    if (frames % 70 === 0) {
+        drawLamps();
+    }
+
+    if (frames % rand(50, 62) === 0) {
+        const value = rand(1, 3);
+        drawClouds(value);
+    }
+}
+
+function addObstacles() {
+    if (score > 1000 && frames % 150 === 0) {
+        drawArrows();
+    }
+
+    const frameInterval = 80;
+
+    if (frames % frameInterval === 0) {
+        if (obstacles.length < 5) {
+            addObstacle();
+        }
+    }
+}
+
+function renderFillers() {
+    clouds.forEach((cloud, index) => {
+        cloud.show(ctx, { crashed });
+
+        if (cloud.outside()) {
+            clouds.splice(index, 1);
+        }
+    });
+
+    lamps.forEach((lamp, index) => {
+        lamp.show(ctx, { crashed });
+
+        if (lamp.outside()) {
+            lamps.splice(index, 1);
+        }
+    });
+
+}
+
+function renderObstacles() {
+    obstacles.forEach((obs, index) => {
+        obs.show(ctx, { crashed });
+        if (obs.hits(character)) {
+            crashed = true
+        }
+
+        if (obs.outside()) {
+            obstacles.splice(index, 1);
+        }
+    });
+
+
+
+    arrows.forEach((arrow, index) => {
+        arrow.show(ctx, { crashed });
+
+        if (arrow.hits(character)) {
+            crashed = true;
+        }
+
+        if (arrow.outside()) {
+            arrows.splice(index, 1);
+        }
+    });
+
 }
 
 // Initial Call

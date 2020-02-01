@@ -20,9 +20,7 @@
     const slidingImages = ['/assets/slide.svg'];
 
     function GameCharacter({ canvas, horizon }) {
-        initialY = horizon - height;
-        maxJumpHeight = horizon - (height * 2.5);
-        minJumpHeight = horizon - (height * 2.4);
+        initialY = horizon - height + 10;
         this.horizon = horizon;
         this.canvas = canvas;
         this.currentRunningImageIndex = 0;
@@ -31,6 +29,9 @@
         this.height = height;
         this.width = width
         this.sliding = false;
+
+        maxJumpHeight = this.horizon - (this.height * 2.5);
+        minJumpHeight = this.horizon - (this.height * 2.4);
 
         this.runningObjects = runningImages.map(imgPath => {
             const img = new Image();
@@ -48,7 +49,10 @@
 
     GameCharacter.prototype = {
         jump() {
-            if (this.y >= maxJumpHeight) {
+            if (this.sliding) {
+                return;
+            }
+            if (!this.sliding && this.y >= maxJumpHeight) {
                 this.y -= gravity * velocity;
             }
         },
@@ -104,11 +108,10 @@
             this.sliding = true;
         },
         getUp() {
+            this.sliding = false;
             this.width = width;
             this.height = height;
-            this.y = this.horizon - height;
-            this.image = null;
-            this.sliding = false;
+            this.y = initialY;
         }
 
 
