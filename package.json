@@ -1,0 +1,16 @@
+{
+  "name": "stickfig",
+  "version": "1.0.0",
+  "repository": "git@github.com:barelyhuman/dinorex.git",
+  "author": "Siddharth Gelera <sidgroks@gmail.com>",
+  "license": "MIT",
+  "source": "src/stickfig.js",
+  "main": "dist/stickfig.js",
+  "scripts": {
+    "build": "microbundle",
+    "dev": "microbundle watch --compress=false"
+  },
+  "devDependencies": {
+    "microbundle": "^0.11.0"
+  }
+}
