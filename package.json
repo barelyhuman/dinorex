@@ -4,14 +4,12 @@
   "repository": "git@github.com:barelyhuman/dinorex.git",
   "author": "Siddharth Gelera <sidgroks@gmail.com>",
   "license": "MIT",
-  "source": "src/main.js",
-  "main": "public/main.js",
+  "main": "src/main.js",
   "scripts": {
-    "prebuild": "microbundle --format cjs --no-sourcemap",
-    "build": "./build.sh",
-    "dev": "microbundle watch --no-compress"
+    "dev": "parcel index.html",
+    "build": "rm -rf public && parcel build index.html --no-source-maps --out-dir public"
   },
   "devDependencies": {
-    "microbundle": "^0.11.0"
+    "parcel-bundler": "^1.12.4"
   }
 }

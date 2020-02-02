@@ -18,11 +18,11 @@ const characterImages = {
 }
 
 
-characterImages.idleImage.src = 'assets/Idle (4).png';
-characterImages.jumpingImage.src = 'assets/Jump (7).png';
-characterImages.runningImageLeft.src = 'assets/Run (4).png';
-characterImages.runningImageRight.src = 'assets/Run (15).png';
-characterImages.slideImage.src = 'assets/Dead (15).png';
+characterImages.idleImage.src = require('./assets/Idle (4).png');
+characterImages.jumpingImage.src = require('./assets/Jump (7).png');
+characterImages.runningImageLeft.src = require('./assets/Run (4).png');
+characterImages.runningImageRight.src = require('./assets/Run (15).png');
+characterImages.slideImage.src = require('./assets/Dead (15).png');
 
 character = {
     height: 64,
@@ -100,4 +100,4 @@ loop = function () {
 
 window.addEventListener("keydown", controller.keyListener)
 window.addEventListener("keyup", controller.keyListener);
-window.requestAnimationFrame(loop);
+loop();
