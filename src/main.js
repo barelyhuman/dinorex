@@ -1,6 +1,8 @@
 let context, controller, rectangle, loop;
 
 let jumpHeight = 25;
+let gravity = 1.5;
+let friction = 0.9;
 
 context = document.querySelector("canvas").getContext("2d");
 
@@ -28,7 +30,6 @@ character = {
     width: 64,
     x: 144,
     image: characterImages.idleImage,
-    x_velocity: 0,
     y: 0,
     y_velocity: 0
 };
@@ -67,11 +68,9 @@ loop = function () {
         character.y_velocity += jumpHeight;
     }
 
-    character.y_velocity += 1.5;
-    character.x += character.x_velocity;
+    character.y_velocity += gravity;
     character.y += character.y_velocity;
-    character.x_velocity *= 0.9;
-    character.y_velocity *= 0.9;
+    character.y_velocity *= friction;
 
 
     if (character.y > context.canvas.height / 2 - character.height) {
@@ -80,12 +79,6 @@ loop = function () {
         character.y_velocity = 0;
     }
 
-
-    if (character.x < 0) {
-        character.x = context.canvas.width;
-    } else if (character.x > context.canvas.width) {
-        character.x = 0;
-    }
 
     context.fillStyle = "#fff";
     context.fillRect(0, 0, context.canvas.width, context.canvas.height);
