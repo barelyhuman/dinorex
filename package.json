@@ -7,7 +7,7 @@
   "source": "src/main.js",
   "main": "dist/main.js",
   "scripts": {
-    "build": "microbundle",
+    "build": "microbundle --format cjs --no-sourcemap",
     "dev": "microbundle watch --no-compress"
   },
   "devDependencies": {
