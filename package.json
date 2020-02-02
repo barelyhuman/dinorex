@@ -5,9 +5,10 @@
   "author": "Siddharth Gelera <sidgroks@gmail.com>",
   "license": "MIT",
   "source": "src/main.js",
-  "main": "dist/main.js",
+  "main": "public/main.js",
   "scripts": {
-    "build": "microbundle --format cjs --no-sourcemap",
+    "prebuild": "microbundle --format cjs --no-sourcemap",
+    "build": "./build.sh",
     "dev": "microbundle watch --no-compress"
   },
   "devDependencies": {
