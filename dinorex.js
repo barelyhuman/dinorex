@@ -213,11 +213,6 @@ function increaseGameSpeed() {
 
 // Render Horizon
 function drawHorizon() {
-    // ctx.beginPath();
-    // ctx.moveTo(0, horizonPosition);
-    // ctx.lineTo(canvas.width, horizonPosition);
-    // ctx.strokeStyle = "#333";
-    // ctx.stroke();
     for (let i = 0; i <= 15; i++) {
         for (let j = 0; j <= ctx.canvas.height; j++) {
             ctx.drawImage(dirtImage, horizonImage.width * i, horizonPosition + (horizonImage.height * j));
