@@ -37,12 +37,12 @@
             if (this.existence) {
                 this.multiple();
             } else {
-                ctx.drawImage(loadedFenceImages[0], this.x, this.y, this.width, this.height);
+                ctx.drawImage(loadedFenceImages[0], this.x, this.horizon - this.height, this.width, this.height);
             }
         },
         multiple() {
-            ctx.drawImage(loadedFenceImages[0], this.x, this.horizon - this.randomDimensionsOne, this.randomDimensionsOne, this.randomDimensionsOne);
-            ctx.drawImage(loadedFenceImages[0], this.x + (this.randomDimensionsTwo - this.randomDimensionsTwo / 2), this.horizon - this.randomDimensionsTwo, this.randomDimensionsTwo, this.randomDimensionsTwo);
+            ctx.drawImage(loadedFenceImages[0], this.x, this.horizon - this.randomDimensionsOne + 10, this.randomDimensionsOne, this.randomDimensionsOne);
+            ctx.drawImage(loadedFenceImages[0], this.x + this.randomDimensionsOne - 10, this.horizon - this.randomDimensionsTwo + 10, this.randomDimensionsTwo, this.randomDimensionsTwo);
         },
         hits(character) {
             if (
