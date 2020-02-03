@@ -166,8 +166,8 @@ function showCrashedMessage() {
     const threshold = 20;
     const messageLineOne = "You Crashed";
     const messageLineTwo = "Press Space to continue";
-    ctx.fillText(messageLineOne, (canvas.width / 2) - 100, horizonPosition / 2);
-    ctx.fillText(messageLineTwo, (canvas.width / 2) - 150, horizonPosition / 2 + threshold);
+    ctx.fillText(messageLineOne, (canvas.width / 2) - messageLineOne.length - 150 / 2, 100);
+    ctx.fillText(messageLineTwo, (canvas.width / 2) - messageLineTwo.length - 150 / 2, 100 + threshold);
 }
 
 
@@ -261,7 +261,7 @@ function showWelcomeMessage() {
     ctx.font = "20px sans-serif";
     ctx.fillStyle = "#333";
     const messageLineTwo = "Press Space to start";
-    ctx.fillText(messageLineTwo, (canvas.width / 2) - 150, horizonPosition / 2);
+    ctx.fillText(messageLineTwo, (canvas.width / 2) - messageLineTwo.length - 150 / 2, 100);
 }
 
 
