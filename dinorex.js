@@ -15,7 +15,7 @@ dirtImage.src = '/assets/dirt.png';
 
 // Constant Declarations
 const jumpKeys = [32, 38];
-const initialSpeed = 10;
+const initialSpeed = 7;
 const ctx = canvas.getContext('2d', { alpha: false });
 const storeName = 'dino-score';
 const horizonPosition = canvas.height / 2 + 100;
