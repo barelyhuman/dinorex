@@ -82,13 +82,12 @@ function getHighscore() {
 
 function loop() {
 
+    animationFrame = requestAnimationFrame(loop);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     frames += 1;
 
     setBackground();
-
-    drawHorizon();
     renderScore();
     increaseGameSpeed();
 
@@ -108,7 +107,7 @@ function loop() {
         showCrashedMessage();
     }
 
-    animationFrame = requestAnimationFrame(loop);
+    drawHorizon();
 }
 
 // Map Keys and Events to actions
@@ -216,13 +215,36 @@ function increaseGameSpeed() {
 
 // Render Horizon
 function drawHorizon() {
-    for (let i = 0; i <= 15; i++) {
-        for (let j = 0; j <= ctx.canvas.height; j++) {
-            ctx.drawImage(dirtImage, horizonImage.width * i, horizonPosition + (horizonImage.height * j));
-        }
-        ctx.drawImage(horizonImage, horizonImage.width * i, horizonPosition);
-    }
+    let draw = true;
+    let xValue = 0;
+    let yValue = horizonPosition;
+    let rowFinished = false;
+    let rows = 0;
+    ctx.drawImage(horizonImage, xValue, yValue);
+    while (draw) {
+        xValue += horizonImage.width;
 
+        if (xValue > canvas.width) {
+            xValue = 0;
+            rowFinished = true;
+            rows += 1;
+        }
+
+        if (rowFinished) {
+            yValue += horizonImage.height;
+            rowFinished = false;
+        }
+
+        if (yValue >= canvas.height) {
+            draw = false;
+        }
+
+        if (rows < 1) {
+            ctx.drawImage(horizonImage, xValue, yValue);
+        } else {
+            ctx.drawImage(dirtImage, xValue, yValue);
+        }
+    }
 }
 
 // Render Clouds
