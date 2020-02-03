@@ -39,12 +39,22 @@
             if (this.existence) {
                 this.multiple();
             } else {
+                this.grayscale(ctx);
                 ctx.drawImage(this.image, this.x, this.horizon - this.height, this.width, this.height);
+                this.resetCtxFilter(ctx);
             }
         },
         multiple() {
+            this.grayscale(ctx);
             ctx.drawImage(this.image, this.x, this.horizon - this.randomDimensionsOne, this.randomDimensionsOne, this.randomDimensionsOne);
             ctx.drawImage(this.imageTwo, this.x + this.randomDimensionsOne + 10, this.horizon - this.randomDimensionsTwo, this.randomDimensionsTwo, this.randomDimensionsTwo);
+            this.resetCtxFilter(ctx);
+        },
+        grayscale(ctx) {
+            ctx.filter = "grayscale(100%)"
+        },
+        resetCtxFilter(ctx) {
+            ctx.filter = "none";
         },
         hits(character) {
             if (this.existence && this.hitMultiple(character)) {
