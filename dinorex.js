@@ -81,6 +81,9 @@ function getHighscore() {
 // Main Render Function
 
 function loop() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     frames += 1;
 
     setBackground();
