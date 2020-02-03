@@ -10,6 +10,8 @@ container.appendChild(canvas);
 
 const horizonImage = new Image();
 horizonImage.src = '/assets/floor.png';
+const dirtImage = new Image();
+dirtImage.src = '/assets/dirt.png';
 
 // Constant Declarations
 const jumpKeys = [32, 38];
@@ -217,6 +219,9 @@ function drawHorizon() {
     // ctx.strokeStyle = "#333";
     // ctx.stroke();
     for (let i = 0; i <= 15; i++) {
+        for (let j = 0; j <= ctx.canvas.height; j++) {
+            ctx.drawImage(dirtImage, horizonImage.width * i, horizonPosition + (horizonImage.height * j));
+        }
         ctx.drawImage(horizonImage, horizonImage.width * i, horizonPosition);
     }
 
