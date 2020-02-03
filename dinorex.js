@@ -36,9 +36,7 @@ let crashed = false;
 // Initial Render 
 function setup() {
     character = new GameCharacter({ canvas, horizon: horizonPosition });
-    character.show(ctx);
     initKeyMaps();
-    setBackground();
     loop();
 }
 
@@ -82,20 +80,6 @@ function loop() {
 
     setBackground();
 
-    if (jump) {
-        character.jump();
-        if (character.reachedMaxHeight()) {
-            jump = false;
-            drop = true;
-        }
-    }
-
-    else if (drop) {
-        character.drop();
-    } else if (character.landed()) {
-        drop = false;
-    }
-
     drawHorizon();
     renderScore();
     increaseGameSpeed();
@@ -128,9 +112,7 @@ function initKeyMaps() {
 }
 
 function touchstarted() {
-    if (character.landed()) {
-        jump = true;
-    }
+    character.jump();
 
     if (!gameStarted) {
         gameStarted = true;
@@ -142,16 +124,10 @@ function touchstarted() {
 }
 
 function touchended(event) {
-    jump = false;
-    drop = true;
+
 }
 
 function keyup(event) {
-    if (jumpKeys.indexOf(event.keyCode) > -1) {
-        jump = false;
-        drop = true;
-    }
-
     if (event.keyCode === 40) {
         sliding = false;
         character.getUp();
@@ -159,12 +135,9 @@ function keyup(event) {
 }
 
 function keydown(event) {
-
     if (!crashed) {
         if (jumpKeys.indexOf(event.keyCode) > -1) {
-            if (character.landed() && !sliding) {
-                jump = true;
-            }
+            character.jump();
 
             if (!gameStarted) {
                 gameStarted = true;
@@ -172,7 +145,6 @@ function keydown(event) {
         }
 
         if (gameStarted && event.keyCode === 40) {
-            drop = false;
             sliding = true;
             character.slide()
         }
@@ -287,9 +259,6 @@ function showWelcomeMessage() {
 
 
 function addFillers() {
-    if (frames % 70 === 0) {
-        drawLamps();
-    }
 
     if (frames % rand(50, 62) === 0) {
         const value = rand(1, 3);
@@ -319,15 +288,6 @@ function renderFillers() {
             clouds.splice(index, 1);
         }
     });
-
-    lamps.forEach((lamp, index) => {
-        lamp.show(ctx, { crashed });
-
-        if (lamp.outside()) {
-            lamps.splice(index, 1);
-        }
-    });
-
 }
 
 function renderObstacles() {
@@ -359,6 +319,5 @@ function renderObstacles() {
 }
 
 // Initial Call
-window.requestAnimationFrame(setup)
-// setup();
+window.requestAnimationFrame(setup);
 

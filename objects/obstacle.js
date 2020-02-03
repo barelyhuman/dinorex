@@ -4,7 +4,7 @@
     let initialX;
     let velocity = 0.7;
 
-    const fenceImages = ['/assets/log-fire.svg'];
+    const fenceImages = ['/assets/yard.svg'];
 
     const loadedFenceImages = fenceImages.map(src => {
         const img = new Image();
@@ -21,7 +21,7 @@
         this.gameSpeed = gameSpeed;
         this.canvas = canvas;
         initialX = canvas.width;
-        this.y = horizon - height + 5;
+        this.y = horizon - height;
         this.horizon = horizon;
         this.x = initialX;
         this.height = height;
@@ -42,11 +42,15 @@
         },
         multiple() {
             ctx.drawImage(loadedFenceImages[0], this.x, this.horizon - this.randomDimensionsOne, this.randomDimensionsOne, this.randomDimensionsOne);
-            ctx.drawImage(loadedFenceImages[0], this.x + 25, this.horizon - this.randomDimensionsTwo, this.randomDimensionsTwo, this.randomDimensionsTwo);
+            ctx.drawImage(loadedFenceImages[0], this.x + (this.randomDimensionsTwo - this.randomDimensionsTwo / 2), this.horizon - this.randomDimensionsTwo, this.randomDimensionsTwo, this.randomDimensionsTwo);
         },
         hits(character) {
-            if (this.x < character.x + character.width && this.x + this.width > character.x &&
-                this.y < character.y + character.height && this.y + this.height > character.y) {
+            if (
+                this.x < character.x + character.width && this.x + this.randomDimensionsOne > character.x &&
+                this.y < character.y + character.height && this.y + this.randomDimensionsOne > character.y &&
+                this.x < character.x + character.width && this.x + this.randomDimensionsTwo > character.x &&
+                this.y < character.y + character.height && this.y + this.randomDimensionsTwo > character.y
+            ) {
                 this.hit = true;
                 return true;
             }
