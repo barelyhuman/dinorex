@@ -2,9 +2,9 @@
     let height;
     let width;
     let initialX;
-    let velocity = 0.2;
+    let velocity = 0.5;
     const cloud = new Image();
-    cloud.src = "/assets/cloud.svg";
+    cloud.src = "/assets/Cloud.png";
 
     function Cloud({ gameSpeed, horizon }) {
         height = width = rand(40, 70);

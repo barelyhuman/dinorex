@@ -78,7 +78,7 @@
                 } else {
                     image = this.runningObjects[0];
                 }
-                if (!crashed && frames % 3 === 0) {
+                if (!crashed && frames % 2 === 0) {
                     if (this.currentRunningImageIndex + 1 > runningImages.length) {
                         this.currentRunningImageIndex = 0;
                     } else {
