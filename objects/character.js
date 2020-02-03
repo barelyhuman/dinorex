@@ -91,9 +91,9 @@
             this.y += this.velocity;
             this.velocity *= this.friction;
 
-            if (this.y > this.horizon - this.height) {
+            if (this.y > this.horizon - this.height + 10) {
                 this.jumping = false;
-                this.y = this.horizon - this.height;
+                this.y = this.horizon - this.height + 10;
                 this.velocity = 0;
             }
 

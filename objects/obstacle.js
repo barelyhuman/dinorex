@@ -47,14 +47,10 @@
             ctx.drawImage(this.imageTwo, this.x + this.randomDimensionsOne + 10, this.horizon - this.randomDimensionsTwo, this.randomDimensionsTwo, this.randomDimensionsTwo);
         },
         hits(character) {
-            if (
-                (this.x < character.x + character.width && this.x + this.width > character.x &&
-                    this.y < character.y + character.height && this.y + this.height > character.y)
-                || (this.x < character.x + character.width && this.x + this.randomDimensionsOne > character.x &&
-                    this.y < character.y + character.height && this.y + this.randomDimensionsOne > character.y) ||
-                (this.x < character.x + character.width && this.x + this.randomDimensionsTwo > character.x &&
-                    this.y < character.y + character.height && this.y + this.randomDimensionsTwo > character.y)
-            ) {
+            if (this.existence && this.hitMultiple(character)) {
+                this.hit = true;
+                return true;
+            } else if (!this.existence && this.hitSingle(character)) {
                 this.hit = true;
                 return true;
             }
@@ -66,6 +62,17 @@
                 return true;
             }
             return false;
+        },
+
+        hitSingle(character) {
+            return (this.x < character.x + (character.width - character.width / 2) && this.x + (this.width - this.width / 2) > character.x &&
+                this.y < character.y + character.height && this.y + this.height > character.y)
+        },
+        hitMultiple(character) {
+            return ((this.x < character.x + (character.width - character.width / 2) && this.x + (this.randomDimensionsOne - this.randomDimensionsOne / 2) > character.x &&
+                this.y < character.y + character.height && this.y + this.randomDimensionsOne > character.y) &&
+                (this.x < character.x + (character.width - character.width / 2) && this.x + (this.randomDimensionsTwo - this.randomDimensionsTwo / 2) > character.x &&
+                    this.y < character.y + character.height && this.y + this.randomDimensionsTwo > character.y))
         }
     }
 
