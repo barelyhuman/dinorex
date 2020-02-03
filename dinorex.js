@@ -8,6 +8,9 @@ canvas.width = container.offsetWidth;
 
 container.appendChild(canvas);
 
+const horizonImage = new Image();
+horizonImage.src = '/assets/floor.png';
+
 // Constant Declarations
 const jumpKeys = [32, 38];
 const initialSpeed = 10;
@@ -208,11 +211,15 @@ function increaseGameSpeed() {
 
 // Render Horizon
 function drawHorizon() {
-    ctx.beginPath();
-    ctx.moveTo(0, horizonPosition);
-    ctx.lineTo(canvas.width, horizonPosition);
-    ctx.strokeStyle = "#333";
-    ctx.stroke();
+    // ctx.beginPath();
+    // ctx.moveTo(0, horizonPosition);
+    // ctx.lineTo(canvas.width, horizonPosition);
+    // ctx.strokeStyle = "#333";
+    // ctx.stroke();
+    for (let i = 0; i <= 15; i++) {
+        ctx.drawImage(horizonImage, horizonImage.width * i, horizonPosition);
+    }
+
 }
 
 // Render Clouds
