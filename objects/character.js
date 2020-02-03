@@ -5,28 +5,18 @@
     let initialX = 30;
 
     const runningImages = [
-        '/assets/Run (1).png',
-        '/assets/Run (2).png',
-        '/assets/Run (3).png',
-        '/assets/Run (4).png',
-        '/assets/Run (5).png',
-        '/assets/Run (6).png',
-        '/assets/Run (7).png',
-        '/assets/Run (8).png',
-        '/assets/Run (9).png',
-        '/assets/Run (10).png',
-        '/assets/Run (11).png',
-        '/assets/Run (12).png',
-        '/assets/Run (13).png',
-        '/assets/Run (14).png',
-        '/assets/Run (15).png',
+        '/assets/2.png',
+        '/assets/3.png',
+        '/assets/4.png',
+        '/assets/5.png',
+        '/assets/6.png',
     ];
 
     const jumpingImages = [
-        '/assets/Jump.png',
+        '/assets/1.png',
     ];
 
-    const slidingImages = ['/assets/Slide.png'];
+    const slidingImages = ['/assets/7.png'];
 
     function GameCharacter({ canvas, horizon }) {
         this.horizon = horizon;
@@ -91,9 +81,9 @@
             this.y += this.velocity;
             this.velocity *= this.friction;
 
-            if (this.y > this.horizon - this.height + 10) {
+            if (this.y > this.horizon - this.height - 5) {
                 this.jumping = false;
-                this.y = this.horizon - this.height + 10;
+                this.y = this.horizon - this.height - 5;
                 this.velocity = 0;
             }
 
