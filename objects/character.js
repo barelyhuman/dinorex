@@ -22,7 +22,7 @@
         this.horizon = horizon;
         this.canvas = canvas;
         this.gravity = 1.5;
-        this.jumpHeight = height / 2 + 2;
+        this.jumpHeight = height / 2;
         this.velocity = 0;
         this.friction = 0.9;
         this.currentRunningImageIndex = 0;

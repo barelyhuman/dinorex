@@ -1,4 +1,6 @@
 
+const FPS = 60;
+let FPSHANDLER;
 // Canvas Setup
 const container = document.querySelector('.game');
 const canvas = document.createElement('canvas');
@@ -15,7 +17,7 @@ dirtImage.src = '/assets/dirt.png';
 
 // Constant Declarations
 const jumpKeys = [32, 38];
-const initialSpeed = 7;
+const initialSpeed = 10;
 const ctx = canvas.getContext('2d', { alpha: false });
 const storeName = 'dino-score';
 const horizonPosition = canvas.height / 2 + 100;
@@ -49,6 +51,7 @@ function setup() {
 // Reset Frames
 function reset() {
     setHighscore();
+    clearTimeout(FPSHANDLER);
     cancelAnimationFrame(animationFrame);
     character = {};
     obstacles = [];
@@ -81,8 +84,6 @@ function getHighscore() {
 // Main Render Function
 
 function loop() {
-
-    animationFrame = requestAnimationFrame(loop);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     frames += 1;
@@ -108,6 +109,10 @@ function loop() {
     }
 
     drawHorizon();
+
+    FPSHANDLER = setTimeout(function () {
+        animationFrame = requestAnimationFrame(loop);
+    }, 1000 / FPS);
 }
 
 // Map Keys and Events to actions
@@ -184,11 +189,6 @@ function setBackground() {
 }
 
 
-// Increment Obstacles
-function addObstacle() {
-    obstacles.push(new Obstacle({ canvas, gameSpeed, horizon: horizonPosition }));
-}
-
 // Render Score and High Score
 function renderScore() {
     if (gameStarted && !crashed) {
@@ -235,27 +235,7 @@ function drawClouds(numberOfClouds) {
 
 }
 
-// Render Lamps
-function drawLamps() {
-    if (lamps.length >= 1) {
-        return;
-    }
 
-    lamps.push(
-        new Lamp({ gameSpeed, horizon: horizonPosition })
-    );
-
-}
-
-function drawArrows() {
-    if (arrows.length >= 1) {
-        return;
-    }
-
-    arrows.push(
-        new Arrow({ gameSpeed, horizon: horizonPosition, character })
-    );
-}
 
 
 function showWelcomeMessage() {
@@ -275,15 +255,20 @@ function addFillers() {
 }
 
 function addObstacles() {
-    if (score > 1000 && frames % 150 === 0) {
-        drawArrows();
+
+    if (frames % 100 === 0) {
+        if (obstacles.length < 5) {
+            obstacles.push(
+                new Obstacle({ canvas, gameSpeed, horizon: horizonPosition })
+            );
+        }
     }
 
-    const frameInterval = 80;
-
-    if (frames % frameInterval === 0) {
-        if (obstacles.length < 5) {
-            addObstacle();
+    if (score > 1000 && frames % 150 === 0) {
+        if (obstacles.length < 2) {
+            obstacles.push(
+                new Arrow({ gameSpeed, horizon: horizonPosition, character })
+            );
         }
     }
 }
@@ -309,8 +294,6 @@ function renderObstacles() {
             obstacles.splice(index, 1);
         }
     });
-
-
 
     arrows.forEach((arrow, index) => {
         arrow.show(ctx, { crashed });
