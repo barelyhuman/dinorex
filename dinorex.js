@@ -215,12 +215,8 @@ function increaseGameSpeed() {
 
 // Render Horizon
 function drawHorizon() {
-    ctx.beginPath();
-    ctx.moveTo(0, horizonPosition);
-    ctx.lineTo(canvas.width, horizonPosition);
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = "#ccc";
-    ctx.stroke();
+    ctx.fillStyle = '#aaa';
+    ctx.fillRect(0, horizonPosition, canvas.width, canvas.height - horizonPosition);
 }
 
 // Render Clouds

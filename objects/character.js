@@ -1,22 +1,23 @@
 (function (namespace) {
 
-    let height = 64;
-    let width = 64;
+    let height = 70;
+    let width = 70;
     let initialX = 30;
 
     const runningImages = [
-        '/assets/2.png',
-        '/assets/3.png',
-        '/assets/4.png',
-        '/assets/5.png',
-        '/assets/6.png',
+        '/assets/rundext2-05.svg',
+        '/assets/rundext2-09.svg',
+        '/assets/rundext2-12.svg',
+        '/assets/rundext2-13.svg',
+        '/assets/rundext2-14.svg',
+        '/assets/rundext2-15.svg',
     ];
 
     const jumpingImages = [
-        '/assets/1.png',
+        '/assets/jump.svg',
     ];
 
-    const slidingImages = ['/assets/7.png'];
+    const slidingImages = ['/assets/slide.svg'];
 
     function GameCharacter({ canvas, horizon }) {
         this.horizon = horizon;
@@ -68,7 +69,7 @@
                 } else {
                     image = this.runningObjects[0];
                 }
-                if (!crashed && frames % 2 === 0) {
+                if (!crashed && frames % 4 === 0) {
                     if (this.currentRunningImageIndex + 1 > runningImages.length) {
                         this.currentRunningImageIndex = 0;
                     } else {
@@ -81,9 +82,9 @@
             this.y += this.velocity;
             this.velocity *= this.friction;
 
-            if (this.y > this.horizon - this.height - 5) {
+            if (this.y > this.horizon - this.height + 10) {
                 this.jumping = false;
-                this.y = this.horizon - this.height - 5;
+                this.y = this.horizon - this.height + 10;
                 this.velocity = 0;
             }
 

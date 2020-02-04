@@ -79,9 +79,9 @@
                 this.y < character.y + character.height && this.y + this.height > character.y)
         },
         hitMultiple(character) {
-            return ((this.x < character.x + (character.width) && this.x + (this.randomDimensionsOne) > character.x &&
+            return ((this.x < character.x + (character.width - character.width / 2) && this.x + (this.randomDimensionsOne - this.randomDimensionsOne / 2) > character.x &&
                 this.y < character.y + character.height && this.y + this.randomDimensionsOne > character.y) &&
-                (this.x < character.x + (character.width) && this.x + (this.randomDimensionsTwo) > character.x &&
+                (this.x < character.x + (character.width - character.width / 2) && this.x + (this.randomDimensionsTwo - this.randomDimensionsTwo / 2) > character.x &&
                     this.y < character.y + character.height && this.y + this.randomDimensionsTwo > character.y))
         }
     }
