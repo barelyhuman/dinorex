@@ -1,16 +1,16 @@
 (function (namespace) {
 
-    let height = 70;
-    let width = 70;
+    let height = 50;
+    let width = 50;
     let initialX = 30;
 
     const runningImages = [
-        '/assets/rundext2-05.svg',
-        '/assets/rundext2-09.svg',
-        '/assets/rundext2-12.svg',
-        '/assets/rundext2-13.svg',
-        '/assets/rundext2-14.svg',
-        '/assets/rundext2-15.svg',
+        '/assets/run-1.svg',
+        '/assets/run-2.svg',
+        '/assets/run-3.svg',
+        '/assets/run-4.svg',
+        '/assets/run-5.svg',
+        '/assets/run-6.svg',
     ];
 
     const jumpingImages = [
@@ -58,7 +58,7 @@
             let image;
 
             if (this.sliding) {
-                image = this.slidingObjects[0];
+                image = this.slidingObjects[0];;
             }
             else if (this.jumping) {
                 image = this.jumpingImages[0];
@@ -69,7 +69,7 @@
                 } else {
                     image = this.runningObjects[0];
                 }
-                if (!crashed && frames % 4 === 0) {
+                if (!crashed && frames % 1.5 === 0) {
                     if (this.currentRunningImageIndex + 1 > runningImages.length) {
                         this.currentRunningImageIndex = 0;
                     } else {
@@ -82,9 +82,9 @@
             this.y += this.velocity;
             this.velocity *= this.friction;
 
-            if (this.y > this.horizon - this.height + 10) {
+            if (this.y > this.horizon - this.height) {
                 this.jumping = false;
-                this.y = this.horizon - this.height + 10;
+                this.y = this.horizon - this.height;
                 this.velocity = 0;
             }
 
