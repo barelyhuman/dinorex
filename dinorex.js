@@ -261,7 +261,7 @@ function addObstacles() {
     }
 
     if (score > 1000 && frames % 150 === 0) {
-        if (obstacles.length < 2) {
+        if (obstacles.length < 4) {
             obstacles.push(
                 new Arrow({ gameSpeed, horizon: horizonPosition, character })
             );
