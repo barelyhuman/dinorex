@@ -1,0 +1,16 @@
+{
+  "name": "dinorex",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:barelyhuman/dinorex.git",
+  "author": "Reaper <ahoy@barelyhuman.dev>",
+  "license": "MIT",
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5"
+  }
+}

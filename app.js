@@ -1,6 +1,11 @@
-const FPS = 60;
-const HORIZON_COLOR = '#4A403A';
-let FPSHANDLER;
+import { GameCharacter } from './objects/character';
+import { Cloud } from './objects/clouds';
+import { Obstacle } from './objects/obstacle';
+import { rand } from './helpers';
+import { Arrow } from './objects/flying-obstacle';
+import DirtImage from './assets/dirt.png';
+import FloorImage from './assets/floor.png';
+
 // Canvas Setup
 const container = document.querySelector('.game');
 const canvas = document.createElement('canvas');
@@ -8,16 +13,12 @@ const canvas = document.createElement('canvas');
 canvas.height = container.offsetHeight;
 canvas.width = container.offsetWidth;
 
-canvas.offscreenCanvas = document.createElement('canvas');
-canvas.offscreenCanvas.width = canvas.width;
-canvas.offscreenCanvas.height = canvas.height;
-
 container.appendChild(canvas);
 
 const horizonImage = new Image();
-horizonImage.src = '/assets/floor.png';
+horizonImage.src = FloorImage;
 const dirtImage = new Image();
-dirtImage.src = '/assets/dirt.png';
+dirtImage.src = DirtImage;
 
 // Constant Declarations
 const jumpKeys = [32, 38];
@@ -52,7 +53,6 @@ function setup() {
 // Reset Frames
 function reset() {
   setHighscore();
-  clearTimeout(FPSHANDLER);
   cancelAnimationFrame(animationFrame);
   character = {};
   obstacles = [];
@@ -108,11 +108,7 @@ function loop() {
   }
 
   drawHorizon();
-  ctx.drawImage(canvas.offscreenCanvas, 0, 0);
-
-  FPSHANDLER = setTimeout(function () {
-    animationFrame = requestAnimationFrame(loop);
-  }, 1000 / FPS);
+  animationFrame = window.requestAnimationFrame(loop);
 }
 
 // Map Keys and Events to actions
@@ -224,10 +220,7 @@ function drawHorizon() {
   let yValue = horizonPosition;
   let rowFinished = false;
   let rows = 0;
-  const offScreenCanvasCTX = canvas.offscreenCanvas.getContext('2d', {
-    alpha: true,
-  });
-  offScreenCanvasCTX.drawImage(horizonImage, xValue, yValue);
+  ctx.drawImage(horizonImage, xValue, yValue);
   while (draw) {
     xValue += horizonImage.width;
 
@@ -247,9 +240,9 @@ function drawHorizon() {
     }
 
     if (rows < 1) {
-      offScreenCanvasCTX.drawImage(horizonImage, xValue, yValue);
+      ctx.drawImage(horizonImage, xValue, yValue);
     } else {
-      offScreenCanvasCTX.drawImage(dirtImage, xValue, yValue);
+      ctx.drawImage(dirtImage, xValue, yValue);
     }
   }
 }
@@ -260,7 +253,7 @@ function drawClouds(numberOfClouds) {
     return;
   }
   for (let i = 0; i < numberOfClouds; i++) {
-    const cloud = new Cloud({ gameSpeed, horizon: horizonPosition });
+    const cloud = new Cloud({ gameSpeed, horizon: horizonPosition, canvas });
     clouds.push(cloud);
   }
 }
@@ -295,7 +288,7 @@ function addObstacles() {
   if (score > 1000 && frames % 120 === 0) {
     if (obstacles.length < 4) {
       obstacles.push(
-        new Arrow({ gameSpeed, horizon: horizonPosition, character })
+        new Arrow({ gameSpeed, horizon: horizonPosition, character, canvas })
       );
     }
   }
@@ -337,4 +330,10 @@ function renderObstacles() {
 }
 
 // Initial Call
-window.requestAnimationFrame(setup);
+document.addEventListener(
+  'DOMContentLoaded',
+  function () {
+    window.requestAnimationFrame(setup);
+  },
+  false
+);
