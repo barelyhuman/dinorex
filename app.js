@@ -7,13 +7,18 @@ import DirtImage from './assets/dirt.png';
 import FloorImage from './assets/floor.png';
 
 // Canvas Setup
-const container = document.querySelector('.game');
-const canvas = document.createElement('canvas');
+const playerCanvas = document.getElementById('canvas1');
+const backgroundCanvas = document.getElementById('canvas2');
+const characterCanvas = document.getElementById('canvas3');
 
-canvas.height = container.offsetHeight;
-canvas.width = container.offsetWidth;
+playerCanvas.height = window.innerHeight;
+playerCanvas.width = window.innerWidth;
 
-container.appendChild(canvas);
+backgroundCanvas.height = window.innerHeight;
+backgroundCanvas.width = window.innerWidth;
+
+characterCanvas.height = window.innerHeight;
+characterCanvas.width = window.innerWidth;
 
 const horizonImage = new Image();
 horizonImage.src = FloorImage;
@@ -23,9 +28,10 @@ dirtImage.src = DirtImage;
 // Constant Declarations
 const jumpKeys = [32, 38];
 const initialSpeed = 10;
-const ctx = canvas.getContext('2d', { alpha: false });
+const ctx = playerCanvas.getContext('2d');
+const ctx2 = backgroundCanvas.getContext('2d');
 const storeName = 'dino-score';
-const horizonPosition = canvas.height / 2 + 100;
+const horizonPosition = playerCanvas.height / 2 + 120;
 
 // Variable Declarations
 let animationFrame;
@@ -43,11 +49,40 @@ let gameSpeed = initialSpeed;
 let score = 0;
 let crashed = false;
 
-// Initial Render
 function setup() {
-  character = new GameCharacter({ canvas, horizon: horizonPosition });
+  character = new GameCharacter({
+    canvas: characterCanvas,
+    horizon: horizonPosition,
+  });
+  drawHorizon(ctx2, horizonPosition);
   initKeyMaps();
-  loop();
+}
+
+function animate() {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  ctx2.clearRect(0, 0, ctx2.canvas.width, ctx2.canvas.height);
+
+  frames += 1;
+  renderScore(ctx);
+  drawHorizon(ctx2, horizonPosition);
+  increaseGameSpeed();
+  if (!gameStarted && !crashed) {
+    showWelcomeMessage();
+  }
+
+  if (gameStarted) {
+    addFillers();
+    addObstacles();
+    renderFillers();
+    renderObstacles();
+    character.show(ctx, frames, crashed);
+  }
+
+  if (crashed) {
+    showCrashedMessage();
+  }
+
+  requestAnimationFrame(animate);
 }
 
 // Reset Frames
@@ -78,37 +113,6 @@ function setHighscore() {
 
 function getHighscore() {
   return localStorage.getItem(storeName);
-}
-
-// Main Render Function
-
-function loop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  frames += 1;
-
-  setBackground();
-  renderScore();
-  increaseGameSpeed();
-
-  if (!gameStarted && !crashed) {
-    showWelcomeMessage();
-  }
-
-  if (gameStarted) {
-    addFillers();
-    addObstacles();
-    renderFillers();
-    renderObstacles();
-    character.show(ctx, frames, crashed);
-  }
-
-  if (crashed) {
-    showCrashedMessage();
-  }
-
-  drawHorizon();
-  animationFrame = window.requestAnimationFrame(loop);
 }
 
 // Map Keys and Events to actions
@@ -170,38 +174,31 @@ function showCrashedMessage() {
   const messageLineTwo = 'Press Space to continue';
   ctx.fillText(
     messageLineOne,
-    canvas.width / 2 - messageLineOne.length - 150 / 2,
+    playerCanvas.width / 2 - messageLineOne.length - 150 / 2,
     100
   );
   ctx.fillText(
     messageLineTwo,
-    canvas.width / 2 - messageLineTwo.length - 150 / 2,
+    playerCanvas.width / 2 - messageLineTwo.length - 150 / 2,
     100 + threshold
   );
 }
 
-// Render Background
-function setBackground() {
-  ctx.fillStyle = '#fff';
-  ctx.fill();
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
-
 // Render Score and High Score
-function renderScore() {
+function renderScore(context) {
   if (gameStarted && !crashed) {
     score += 1;
   }
 
   const highScore = getHighscore();
 
-  ctx.font = '18px sans-serif';
-  ctx.fillStyle = '#5F7A61';
+  context.font = '18px sans-serif';
+  context.fillStyle = '#5F7A61';
   const threshold = 30;
   const text = `HI ${highScore || 0} | ${score}`;
-  ctx.fillText(
+  context.fillText(
     text,
-    canvas.width - text.length * text.length - threshold,
+    playerCanvas.width - text.length * text.length - threshold,
     threshold
   );
 }
@@ -214,37 +211,26 @@ function increaseGameSpeed() {
 }
 
 // Render Horizon
-function drawHorizon() {
+function drawHorizon(context, horizonPosition) {
+  context.clearRect(0, 0, context.canvas.height, context.canvas.width);
   let draw = true;
   let xValue = 0;
   let yValue = horizonPosition;
   let rowFinished = false;
   let rows = 0;
-  ctx.drawImage(horizonImage, xValue, yValue);
-  while (draw) {
-    xValue += horizonImage.width;
+  const landPattern = context.createPattern(horizonImage, 'repeat');
+  const dirtPattern = context.createPattern(dirtImage, 'repeat');
+  context.fillStyle = landPattern;
+  context.fillRect(xValue, yValue, context.canvas.width, 120);
+  context.fillStyle = dirtPattern;
+  context.fillRect(
+    xValue,
+    yValue + 110,
+    context.canvas.width,
+    context.canvas.height - 120
+  );
 
-    if (xValue > canvas.width) {
-      xValue = 0;
-      rowFinished = true;
-      rows += 1;
-    }
-
-    if (rowFinished) {
-      yValue += horizonImage.height;
-      rowFinished = false;
-    }
-
-    if (yValue >= canvas.height) {
-      draw = false;
-    }
-
-    if (rows < 1) {
-      ctx.drawImage(horizonImage, xValue, yValue);
-    } else {
-      ctx.drawImage(dirtImage, xValue, yValue);
-    }
-  }
+  // context.drawImage(horizonImage, xValue, yValue);
 }
 
 // Render Clouds
@@ -253,7 +239,11 @@ function drawClouds(numberOfClouds) {
     return;
   }
   for (let i = 0; i < numberOfClouds; i++) {
-    const cloud = new Cloud({ gameSpeed, horizon: horizonPosition, canvas });
+    const cloud = new Cloud({
+      gameSpeed,
+      horizon: horizonPosition,
+      canvas: playerCanvas,
+    });
     clouds.push(cloud);
   }
 }
@@ -264,7 +254,7 @@ function showWelcomeMessage() {
   const messageLineTwo = 'Press Space to start';
   ctx.fillText(
     messageLineTwo,
-    canvas.width / 2 - messageLineTwo.length - 150 / 2,
+    playerCanvas.width / 2 - messageLineTwo.length - 150 / 2,
     100
   );
 }
@@ -280,7 +270,11 @@ function addObstacles() {
   if (frames % 100 === 0) {
     if (obstacles.length < 5) {
       obstacles.push(
-        new Obstacle({ canvas, gameSpeed, horizon: horizonPosition })
+        new Obstacle({
+          canvas: playerCanvas,
+          gameSpeed,
+          horizon: horizonPosition,
+        })
       );
     }
   }
@@ -288,7 +282,12 @@ function addObstacles() {
   if (score > 1000 && frames % 120 === 0) {
     if (obstacles.length < 4) {
       obstacles.push(
-        new Arrow({ gameSpeed, horizon: horizonPosition, character, canvas })
+        new Arrow({
+          gameSpeed,
+          horizon: horizonPosition,
+          character,
+          canvas: playerCanvas,
+        })
       );
     }
   }
@@ -330,10 +329,5 @@ function renderObstacles() {
 }
 
 // Initial Call
-document.addEventListener(
-  'DOMContentLoaded',
-  function () {
-    window.requestAnimationFrame(setup);
-  },
-  false
-);
+setup();
+animate();
